@@ -1,13 +1,9 @@
 import networkGen
 
-network1 = networkGen.NeuralNetwork([2,4,7])
+network1 = networkGen.NeuralNetwork([2,3,2])
+network1.setWeight(0, 1, 1, 2.5)
+network1.setBias(1, 0, 1.0)
 
 network1.printNetwork()
-
 print()
-
-network1.setBias(1, 3, 3)
-
-network1.printNetwork()
-
-print(network1.getBias(1,3))
+print(network1.fullForwardPass([1.0,2.0]))

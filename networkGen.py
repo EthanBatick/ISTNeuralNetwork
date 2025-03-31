@@ -1,4 +1,5 @@
-from variousUtil import dot
+from variousUtil import dot, activationFunction
+import copy
 
 #   object that represents a complete neural network
 class NeuralNetwork:
@@ -42,8 +43,15 @@ class NeuralNetwork:
 #   -----------------------------------------------------------------
     
     #   returns ouput array of full forward computation of network
-    def fullForwardPass(self, input):
-        pass
+    def fullForwardPass(self, input1):
+        outputFromLast = copy.deepcopy(input1)
+        for layer in self.network:
+            output = []
+            for node in layer.layer:
+                output.append(activationFunction(dot(outputFromLast, node.weights) + node.bias))
+            outputFromLast = copy.deepcopy(output)
+        return outputFromLast
+        
     
     #   dev function to print the whole network
     def printNetwork(self):
