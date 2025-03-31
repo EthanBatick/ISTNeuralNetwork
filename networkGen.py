@@ -21,6 +21,30 @@ class NeuralNetwork:
         for i in range(1, len(networkStructure)):
             self.network.append(Layer(networkStructure[i], networkStructure[i - 1]))
     
+#   getter and setter methods ---------------------------------------
+    
+    #   zero indexed
+    def getWeight(self, layer, node, weight):
+        return self.network[layer].layer[node].weights[weight]
+
+    #   zero indexed
+    def setWeight(self, layer, node, weight, newWeight):
+        self.network[layer].layer[node].weights[weight] = newWeight
+        
+    #   zero indexed
+    def getBias(self, layer, node):
+        return self.network[layer].layer[node].bias
+
+    #   zero indexed
+    def setBias(self, layer, node, newBias):
+        self.network[layer].layer[node].bias = newBias
+            
+#   -----------------------------------------------------------------
+    
+    #   returns ouput array of full forward computation of network
+    def fullForwardPass(self, input):
+        pass
+    
     #   dev function to print the whole network
     def printNetwork(self):
         for layerObj in self.network:
