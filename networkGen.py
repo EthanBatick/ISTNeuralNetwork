@@ -1,5 +1,6 @@
-from variousUtil import dot, activationFunction
+from variousUtil import dot, activationFunction, outputActivationFunction
 import copy
+import random
 
 #   object that represents a complete neural network
 class NeuralNetwork:
@@ -45,12 +46,17 @@ class NeuralNetwork:
     #   returns ouput array of full forward computation of network
     def fullForwardPass(self, input1):
         outputFromLast = copy.deepcopy(input1)
-        for layer in self.network:
+        for i, layer in enumerate(self.network):
             output = []
             for node in layer.layer:
-                output.append(activationFunction(dot(outputFromLast, node.weights) + node.bias))
-            outputFromLast = copy.deepcopy(output)
+                val = dot(outputFromLast, node.weights) + node.bias
+                if i == len(self.network) - 1:
+                    output.append(outputActivationFunction(val))  # output layer
+                else:
+                    output.append(activationFunction(val))         # hidden layers
+            outputFromLast = output
         return outputFromLast
+
         
     
     #   dev function to print the whole network
@@ -81,9 +87,8 @@ class Layer:
     
 #   node object that simply holds
 #   a weight and a bias
+
 class Node:
     def __init__(self, prevLayerSize):
-        self.bias = 0.0
-        self.weights = []
-        for i in range(prevLayerSize):
-            self.weights.append(1.0)
+        self.bias = random.uniform(-0.1, 0.1)
+        self.weights = [random.uniform(-0.1, 0.1) for _ in range(prevLayerSize)]
