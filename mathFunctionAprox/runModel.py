@@ -1,10 +1,14 @@
 import os
 from networkGen import NeuralNetwork
+
+
+#   provide txt file of network model on this line MAKE SURE to add .txt or whatever extension
+filename = "xSquaredModel8Loss.txt"
     
 
 #find model
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'xSquaredModel1.txt')
+file_path = os.path.join(script_dir, filename)
 
 #open that bitch
 with open(file_path, "r") as f:
