@@ -3,13 +3,17 @@ import random
 from practiceData import sampleIns, sampleOuts
 import networkGen
 from variousUtil import lossDiffSquared
+import os
 
-TARGET_LOSS = 10
-MAX_ATTEMPTS = 10
+#   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
+TARGET_LOSS = 50
+PERSERVERE_LOSS = 50
+MAX_ATTEMPTS = 100
+structure = [1,10,5,1]
+mainNetwork = networkGen.NeuralNetwork(structure)
 
-def trainModel():
-    structure = [1, 10, 5, 1]
-    mainNetwork = networkGen.NeuralNetwork(structure)
+def trainModel(mainNetwork, structure):
+    
 
     sampleInputs = copy.deepcopy(sampleIns)
     sampleOutputs = copy.deepcopy(sampleOuts)
@@ -23,7 +27,7 @@ def trainModel():
     previousLoss = None
     stagnationCounter = 0
     stagnationThreshold = 0.0005  # 0.05% relative change
-    stagnationLimit = 5
+    stagnationLimit = 3
 
     while True:
         changeBiasImproved = False
@@ -95,13 +99,16 @@ def trainModel():
         if previousLoss is not None:
             delta = abs(lossMain - previousLoss) / (lossMain + 1e-8)
             if delta < stagnationThreshold:
-                stagnationCounter += 1
-                print(f"⚠️  Loss change Δ{delta:.5f} is small — {stagnationCounter}/{stagnationLimit}")
+                if lossMain > PERSERVERE_LOSS:
+                    stagnationCounter += 1
+                    print(f"⚠️  Loss change Δ{delta:.5f} is small — {stagnationCounter}/{stagnationLimit}")
+                else:
+                    print("stagnation but perserverance hit. Loss: ", lossMain)
             else:
                 stagnationCounter = 0
         previousLoss = lossMain
 
-        if stagnationCounter >= stagnationLimit and bestLoss > TARGET_LOSS:
+        if stagnationCounter >= stagnationLimit and bestLoss > TARGET_LOSS and bestLoss > PERSERVERE_LOSS:
             print("😴 Training is asymptotic and still above target loss — restarting...")
             return None
 
@@ -137,7 +144,7 @@ model = None
 
 while attempts < MAX_ATTEMPTS:
     print(f"\n🚀 Starting training attempt #{attempts + 1}...")
-    result = trainModel()
+    result = trainModel(mainNetwork, structure)
 
     if result is not None:
         model, bestLoss = result
@@ -151,18 +158,25 @@ while attempts < MAX_ATTEMPTS:
 
     attempts += 1
 
-# 🧪 Interactive testing
-if model is None or bestLoss >= TARGET_LOSS:
-    print("❌ Could not train a good model after several attempts.")
-else:
-    print("🎉 Training complete! Test your model:")
-    while True:
-        try:
-            user_input = input("Enter a number (or 'q' to quit): ")
-            if user_input.lower() == 'q':
-                break
-            x = float(user_input)
-            prediction = model.fullForwardPass([x])[0]
-            print(f"Model says: {prediction:.4f}  |  Actual x²: {x**2:.4f}")
-        except:
-            print("Invalid input.")
+
+
+#   write trained data into a file to store weights and biases
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, 'xSquaredModel1.txt')
+dataFile = open(file_path, 'w')
+
+
+# Write structure
+dataFile.write(" ".join(map(str, structure)) + "\n")
+
+# Write each node's weights + bias in a single line
+for layerInd in range(1, len(structure)):
+    for nodeInd in range(structure[layerInd]):
+        weights = [model.getWeight(layerInd - 1, nodeInd, i) for i in range(structure[layerInd - 1])]
+        bias = model.getBias(layerInd - 1, nodeInd)
+        nodeData = weights + [bias]
+        dataFile.write(" ".join(map(str, nodeData)) + "\n")
+
+
+dataFile.close()
