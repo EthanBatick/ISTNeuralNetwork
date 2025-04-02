@@ -6,8 +6,8 @@ from variousUtil import lossDiffSquared
 import os
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 8
-PERSERVERE_LOSS = 8
+TARGET_LOSS = 20
+PERSERVERE_LOSS = 20
 MAX_ATTEMPTS = 100
 structure = [1,15,10,5,1]
 mainNetwork = networkGen.NeuralNetwork(structure)
@@ -163,7 +163,7 @@ while attempts < MAX_ATTEMPTS:
 #   write trained data into a file to store weights and biases
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'xSquaredModel2.txt')
+file_path = os.path.join(script_dir, 'xSquaredMinus10.txt')
 dataFile = open(file_path, 'w')
 
 

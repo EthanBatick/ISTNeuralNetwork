@@ -3,7 +3,7 @@ from networkGen import NeuralNetwork
 
 
 #   provide txt file of network model on this line MAKE SURE to add .txt or whatever extension
-filename = "xSquaredModel8Loss.txt"
+filename = "xSquaredMinus10-20Loss.txt"
     
 
 #find model
@@ -31,7 +31,7 @@ for layerInd in range(1, len(structure)):
 
 
 #   run user interactive with given model
-print("X Squared neural network approximater:")
+print("Math Function neural network approximater:")
 while True:
     
     #   take user input
