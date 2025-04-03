@@ -1,16 +1,19 @@
 import copy
 import random
-from practiceData import sampleIns, sampleOuts
+from dogOrCatData import sampleIns, sampleOuts
 import networkGen
 from variousUtil import lossDiffSquared
 import os
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 100
-PERSERVERE_LOSS = 100
+TARGET_LOSS = 5
+PERSERVERE_LOSS = 5
 MAX_ATTEMPTS = 100
-structure = [1,15,10,1]
+structure = [3072,16,8,2]
 mainNetwork = networkGen.NeuralNetwork(structure)
+
+#   file that trained network data will save to
+weightsSaveFile = 'catOrDog1.txt'
 
 def trainModel(mainNetwork, structure):
     
@@ -62,6 +65,8 @@ def trainModel(mainNetwork, structure):
                     changeBiasImproved = True
 
                 for weightInd in range(structure[layerInd - 1]):
+                    if weightInd % 100 == 0:
+                        print(layerInd,nodeInd,weightInd)
                     networkUpW = copy.deepcopy(mainNetwork)
                     networkUpW.setWeight(layerInd - 1, nodeInd, weightInd,
                         mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd) + changeWeight)
@@ -154,7 +159,8 @@ while attempts < MAX_ATTEMPTS:
         else:
             print(f"⚠️ Model got stuck at loss {bestLoss:.2f} — restarting...")
     else:
-        print("💥 Training failed. Retrying...")
+        print("💥 Training stagnated. Terminating and recording")
+        break
 
     attempts += 1
 
@@ -163,7 +169,7 @@ while attempts < MAX_ATTEMPTS:
 #   write trained data into a file to store weights and biases
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'xSquaredOneHiddenOnlyLargerDataset.txt')
+file_path = os.path.join(script_dir, weightsSaveFile)
 dataFile = open(file_path, 'w')
 
 

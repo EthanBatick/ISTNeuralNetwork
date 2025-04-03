@@ -1,9 +1,11 @@
 import os
 from networkGen import NeuralNetwork
+from PIL import Image
+from dogOrCatData import RESIZED_DIMENSIONS
 
 
 #   provide txt file of network model on this line MAKE SURE to add .txt or whatever extension
-filename = "xSquaredLargerDataset-100Loss.txt"
+filename = "catOrDog-16Res-20samples-10Loss.txt"
     
 
 #find model
@@ -30,18 +32,31 @@ for layerInd in range(1, len(structure)):
         network.setBias(layerInd - 1, nodeInd, bias)
 
 
+#   function to compile user provided image to input layer
+def load_and_flatten_with_resize(image_path):
+    img = Image.open(image_path).convert('RGB')
+    img = img.resize(RESIZED_DIMENSIONS)
+    pixels = list(img.getdata())  # list of (R, G, B)
+    flat_list = []
+    for pixel in pixels:
+        flat_list.extend(pixel)  # Add R, G, B individually
+    return flat_list  # length = 32*32*3 = 3072
+
+
+
 #   run user interactive with given model
-print("Math Function neural network approximater:")
-while True:
-    
-    #   take user input
-    a = input("Input a number ('q' to exit): ")
-    
-    
-    if a == 'q':
-    #   exit condition
-        print("goodbye!")
-        break
-    
-    else:
-        print("network output: ", network.fullForwardPass([float(a)])[0])
+
+#   take user input
+#   path = str(input("give exact path to image: "))
+
+path = "dogOrCat/testInputPics/testDog0.png"
+
+im1 = load_and_flatten_with_resize(path)
+
+output = network.fullForwardPass(im1)
+print(output)
+'''
+if output[0] > output[1]:
+    print("cat")
+else:
+    print("dog")'''
