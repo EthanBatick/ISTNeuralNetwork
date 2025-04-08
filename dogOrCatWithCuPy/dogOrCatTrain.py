@@ -6,14 +6,14 @@ from variousUtil import lossDiffSquared
 import os
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 2
-PERSERVERE_LOSS = 2
+TARGET_LOSS = 80
+PERSERVERE_LOSS = 80
 MAX_ATTEMPTS = 100
-structure = [3072,32,16,2]
+structure = [27,1,5,2]
 mainNetwork = networkGen.NeuralNetwork(structure)
 
 #   file that trained network data will save to
-weightsSaveFile = 'catOrDogCUPY1-100samples-8loss.txt'
+weightsSaveFile = 'catOrDogCUPY1-test.txt'
 
 def trainModel(mainNetwork, structure):
     
@@ -31,8 +31,10 @@ def trainModel(mainNetwork, structure):
     stagnationCounter = 0
     stagnationThreshold = 0.0002  # 0.0% relative change aka it goes forever
     stagnationLimit = 3
-
+    hardBreak = False
     while True:
+        if hardBreak:
+            break
         changeBiasImproved = False
         changeWeightImproved = False
 
@@ -65,7 +67,7 @@ def trainModel(mainNetwork, structure):
                     changeBiasImproved = True
 
                 for weightInd in range(structure[layerInd - 1]):
-                    if weightInd % 100 == 0:
+                    if weightInd % 1 == 0:
                         print(layerInd,nodeInd,weightInd,lossMain)
                     networkUpW = copy.deepcopy(mainNetwork)
                     networkUpW.setWeight(layerInd - 1, nodeInd, weightInd,
@@ -91,6 +93,11 @@ def trainModel(mainNetwork, structure):
                     else:
                         mainNetwork = copy.deepcopy(networkDownW)
                         changeWeightImproved = True
+                        
+                if bestLoss < TARGET_LOSS:
+                    print("✅ Reached target loss. Done training!")
+                    cleanExit = True
+                    return mainNetwork, bestLoss
                     
                     
 
@@ -119,11 +126,6 @@ def trainModel(mainNetwork, structure):
         if stagnationCounter >= stagnationLimit and bestLoss > TARGET_LOSS and bestLoss > PERSERVERE_LOSS:
             print("😴 Training is asymptotic and still above target loss — restarting...")
             return None
-
-        if bestLoss < TARGET_LOSS:
-            print("✅ Reached target loss. Done training!")
-            cleanExit = True
-            break
 
         # Jitter if fully stuck
         if changeBias < 1e-6 and changeWeight < 1e-6:

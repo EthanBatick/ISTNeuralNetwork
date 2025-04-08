@@ -43,7 +43,20 @@ while True:
     try:
         path = os.path.join(script_dir, "testInputPics", a)
         output = network.fullForwardPass(load_and_flatten_normalized(path))
-        label = "Dog 🐶" if output[1] > output[0] else "Cat 🐱"
-        print(f"✅ Model output: {output} → Predicted: {label}")
+        label = ""
+        if output[1] > output[0]:
+            if output[1] > .6:
+                label = "Dog 🐶 " + str(min(output[1]*100, 100)) + "%"
+            else:
+                label = "think its a dog but not sure"
+        else:
+            if output[0] > .6:
+                label = "Cat 🐱 " + str(min(output[0]*100, 100)) + "%"
+            else:
+                label = "thinks its a cat but not sure"
+        #print(f"✅ Model output: {output} → Predicted: {label}")
+        print()
+        print(label)
+        print()
     except Exception as e:
         print(f"❌ Error: {e}")

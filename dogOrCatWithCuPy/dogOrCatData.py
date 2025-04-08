@@ -5,7 +5,7 @@ import os
 import cupy as cp
 
 # Parameters
-RESIZED_DIMENSIONS = (32, 32)
+RESIZED_DIMENSIONS = (3, 3)
 base_path = "dogOrCatWithCuPy"
 cat_dir = os.path.join(base_path, "cats")
 dog_dir = os.path.join(base_path, "dogs")
