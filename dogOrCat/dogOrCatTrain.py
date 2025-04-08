@@ -6,13 +6,13 @@ from variousUtil import lossDiffSquared
 import os
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 5
-PERSERVERE_LOSS = 5
+TARGET_LOSS = 8
+PERSERVERE_LOSS = 8
 MAX_ATTEMPTS = 100
 structure = [3072,16,8,2]
 mainNetwork = networkGen.NeuralNetwork(structure)
 
-#   file that trained network data will save to
+#   file that trained network  data will save to
 weightsSaveFile = 'catOrDog1.txt'
 
 def trainModel(mainNetwork, structure):
