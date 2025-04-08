@@ -6,8 +6,8 @@ from variousUtil import lossDiffSquared
 import os
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 80
-PERSERVERE_LOSS = 80
+TARGET_LOSS = 100
+PERSERVERE_LOSS = 100
 MAX_ATTEMPTS = 100
 structure = [27,1,5,2]
 mainNetwork = networkGen.NeuralNetwork(structure)
@@ -94,15 +94,15 @@ def trainModel(mainNetwork, structure):
                         mainNetwork = copy.deepcopy(networkDownW)
                         changeWeightImproved = True
                         
-                if bestLoss < TARGET_LOSS:
-                    print("✅ Reached target loss. Done training!")
-                    cleanExit = True
-                    return mainNetwork, bestLoss
+                    if bestLoss < TARGET_LOSS:
+                        print("✅ Reached target loss. Done training!")
+                        cleanExit = True
+                        return mainNetwork, bestLoss
                     
                     
 
 
-        # Shrink steps only if no improvement at all
+        # Shrink steps only if no improvement at all.
         if not changeBiasImproved:
             changeBias = max(changeBias / 2, 1e-6)
         if not changeWeightImproved:
@@ -180,6 +180,7 @@ dataFile = open(file_path, 'w')
 
 # Write structure
 dataFile.write(" ".join(map(str, structure)) + "\n")
+print("recording")
 
 # Write each node's weights + bias in a single line
 for layerInd in range(1, len(structure)):
