@@ -7,7 +7,7 @@ from dogOrCatData import RESIZED_DIMENSIONS
 
 # === Load trained model ===
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'catOrDogCUPY1-32Res-100samples-0.2loss.txt')
+file_path = os.path.join(script_dir, 'catOrDogCUPY1-test.txt')
 
 with open(file_path, "r") as f:
     lines = f.readlines()
