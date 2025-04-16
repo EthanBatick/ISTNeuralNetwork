@@ -7,18 +7,18 @@ import os
 
 
 #   changeWeights and changeBiases will half after this many passes of the entire network
-DIVIDE_AFTER_PASSES = 3
+DIVIDE_AFTER_PASSES = 5
 
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 6
-PERSERVERE_LOSS = 6
+TARGET_LOSS = 3
+PERSERVERE_LOSS = 3
 MAX_ATTEMPTS = 10
-structure = [3,8,4,1]
+structure = [3,16,8,1]
 mainNetwork = networkGen.NeuralNetwork(structure)
 
 #   file that trained network data will save to
-weightsSaveFile = 'gymBusy-300Samples-6Loss.txt'
+weightsSaveFile = 'gymBusyTran-300Samples-3Loss.txt'
 
 def trainModel(mainNetwork, structure):
     

@@ -8,7 +8,7 @@ SAMPLE_SIZE = 300
 
 #chatgpt generated gym time data
 '''
-🧠 Input Features:
+🧠 Input Features (in order in input array):
 hour (0–11) → morning/evening 12-hour format
 
 am_pm (0 = AM, 1 = PM)

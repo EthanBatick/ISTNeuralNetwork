@@ -5,7 +5,7 @@ from networkGen import NeuralNetwork
 
 # === Load trained model ===
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'gymBusy-300Samples-6Loss.txt')
+file_path = os.path.join(script_dir, 'gymBusy-300Samples-3Loss.txt')
 
 with open(file_path, "r") as f:
     lines = f.readlines()
