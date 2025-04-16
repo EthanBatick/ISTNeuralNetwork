@@ -25,12 +25,15 @@ for layerInd in range(1, len(structure)):
         network.setBias(layerInd - 1, nodeInd, bias)
 
 # === Inference loop
+#turned into method so the UI can easily call
 print("Gym business predictor!")
-while True:
-    hour = int(input('hour (0–11) → morning/evening 12-hour format: '))
-    ampm = int(input('(0 = AM, 1 = PM): '))
-    day = int(input('(0 = Monday, ..., 6 = Sunday)'))
+def predict(hour, ampm, day):
+    #hour = int(input('hour (0–11) → morning/evening 12-hour format: '))
+    #ampm = int(input('(0 = AM, 1 = PM): '))
+    #day = int(input('(0 = Monday, ..., 6 = Sunday)'))
 
     tup = (hour, ampm, day)
 
-    print(str(round(network.fullForwardPass(tup)[0]*100, 1)) + "% full")
+    return network.fullForwardPass(tup)[0]*100
+
+    #print(str(round(network.fullForwardPass(tup)[0]*100, 1)) + "% full")

@@ -42,8 +42,7 @@ def shift_color(color, max_change=10):
 
 #   function to draw full network given 'networkCoords'
 def drawNetwork(networkCoords, nodeRadius, color):
-    
-    
+
     for layer in networkCoords:
         for node in layer:
             #color = shift_color(color, max_change=50)
