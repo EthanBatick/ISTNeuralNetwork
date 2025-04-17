@@ -14,4 +14,4 @@ these models
 
 if you are trying to train a model yourself,
 some algorithms require Nvidia Cuda (*** version 11.2 ***) to offload
-math to the GPU, I use all version 11 in this project
+math to the GPU, I use all version 11.2 in this project
