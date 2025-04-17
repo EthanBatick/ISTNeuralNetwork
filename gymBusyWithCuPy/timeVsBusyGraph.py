@@ -1,3 +1,7 @@
+#########################
+##  MAKE SURE to change the model in runModel.py
+##  to the one you want, because this script makes a call ther
+#########################
 import pygame
 import sys
 from runModel import predict
