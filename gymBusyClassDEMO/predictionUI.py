@@ -78,7 +78,7 @@ while True:
             # prediction = model.fullForwardPass([hour, ampm, day])[0] * 100
             #print("here")
             prediction = predict(hour, ampm, day)
-            print(prediction)
+            #print(prediction)
 
             result = f"Predicted Busy: {prediction:.1f}% full"
         except:

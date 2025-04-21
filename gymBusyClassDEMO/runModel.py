@@ -5,7 +5,7 @@ from networkGen import NeuralNetwork
 
 # === Load trained model ===
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'gymBusy-328SamplesWithAM-3Loss.txt')
+file_path = os.path.join(script_dir, 'gymBusy-300Samples-1.5Loss.txt')
 
 with open(file_path, "r") as f:
     lines = f.readlines()
@@ -26,7 +26,7 @@ for layerInd in range(1, len(structure)):
 
 # === Inference loop
 #turned into method so the UI can easily call
-print("Gym business predictor!")
+#print("Gym business predictor!")
 def predict(hour, ampm, day):
     #hour = int(input('hour (0–11) → morning/evening 12-hour format: '))
     #ampm = int(input('(0 = AM, 1 = PM): '))
