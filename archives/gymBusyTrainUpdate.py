@@ -7,18 +7,18 @@ import os
 
 
 #   changeWeights and changeBiases will half after this many passes of the entire network
-DIVIDE_AFTER_PASSES = 10
+DIVIDE_AFTER_PASSES = 8
 
 
 #   make TARGET_LOSS = PERSERVERANCE_LOSS to prevent stagnation
-TARGET_LOSS = 1.5
-PERSERVERE_LOSS = 1.5
+TARGET_LOSS = 6
+PERSERVERE_LOSS = 6
 MAX_ATTEMPTS = 10
-structure = [3,32,16,1]
+structure = [3,20,10,1]
 mainNetwork = networkGen.NeuralNetwork(structure)
 
 #   file that trained network data will save to
-weightsSaveFile = 'gymBusy-328SamplesWithAM-1.5Loss.txt'
+weightsSaveFile = 'gymBusy-300SamplesWithAM-6Loss.txt'
 
 def trainModel(mainNetwork, structure):
     
@@ -51,6 +51,10 @@ def trainModel(mainNetwork, structure):
             for nodeInd in range(structure[layerInd]):
                 changeBiasImproved = False
                 changeWeightImproved = False
+
+
+                #   TODO
+                '''
                 # Bias tweak
                 networkUpB = copy.deepcopy(mainNetwork)
                 networkUpB.setBias(layerInd - 1, nodeInd,
@@ -58,50 +62,90 @@ def trainModel(mainNetwork, structure):
                 networkDownB = copy.deepcopy(mainNetwork)
                 networkDownB.setBias(layerInd - 1, nodeInd,
                     mainNetwork.getBias(layerInd - 1, nodeInd) - changeBias)
+                #   TODO end
+                '''
+
+                #   set the up and down biases
+                stayB = mainNetwork.getBias(layerInd - 1, nodeInd)
+                upB = mainNetwork.getBias(layerInd - 1, nodeInd) + changeBias
+                downB = mainNetwork.getBias(layerInd - 1, nodeInd) - changeBias
 
                 lossMain = lossUp = lossDown = 0
+
+                #   calc loss without changes
                 for i in range(len(sampleInputs)):
                     lossMain += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
-                    lossUp += lossDiffSquared(networkUpB.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
-                    lossDown += lossDiffSquared(networkDownB.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
+                #   calc loss with up tweak
+                for i in range(len(sampleInputs)):
+                    mainNetwork.setBias(layerInd - 1, nodeInd, upB)
+                    lossUp += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
+                #   calc loss with down tweak
+                for i in range(len(sampleInputs)):
+                    mainNetwork.setBias(layerInd - 1, nodeInd, downB)
+                    lossDown += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
 
                 if lossMain < bestLoss:
                     bestLoss = lossMain
 
                 if lossMain < lossUp and lossMain < lossDown:
-                    pass  # no improvement
+                    #   set network back to original
+                    mainNetwork.setBias(layerInd - 1, nodeInd, stayB)
+
                 elif lossUp < lossDown:
-                    mainNetwork = copy.deepcopy(networkUpB)
+                    #   TODO
+                    mainNetwork.setBias(layerInd - 1, nodeInd, upB)
                     changeBiasImproved = True
                 else:
-                    mainNetwork = copy.deepcopy(networkDownB)
+                    #   TODO
+                    mainNetwork.setBias(layerInd - 1, nodeInd, downB)
                     changeBiasImproved = True
 
                 for weightInd in range(structure[layerInd - 1]):
-                    networkUpW = copy.deepcopy(mainNetwork)
-                    networkUpW.setWeight(layerInd - 1, nodeInd, weightInd,
-                        mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd) + changeWeight)
-                    networkDownW = copy.deepcopy(mainNetwork)
-                    networkDownW.setWeight(layerInd - 1, nodeInd, weightInd,
-                        mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd) - changeWeight)
+
+                    #   TODO 
 
                     lossMain = lossUp = lossDown = 0
+
+                    #   set the up and down biases
+                    stayW = mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd)
+                    upW = mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd) + changeWeight
+                    downW = mainNetwork.getWeight(layerInd - 1, nodeInd, weightInd) - changeWeight
+
+                    #   TODO
+
+                    #   calc loss without changes
                     for i in range(len(sampleInputs)):
                         lossMain += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
-                        lossUp += lossDiffSquared(networkUpW.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
-                        lossDown += lossDiffSquared(networkDownW.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
+                    #   calc loss with up tweak
+                    for i in range(len(sampleInputs)):
+                        mainNetwork.setWeight(layerInd - 1, nodeInd, weightInd, upW)
+                        lossUp += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
+                    #   calc loss with down tweak
+                    for i in range(len(sampleInputs)):
+                        mainNetwork.setWeight(layerInd - 1, nodeInd, weightInd, downW)
+                        lossDown += lossDiffSquared(mainNetwork.fullForwardPass(sampleInputs[i]), sampleOutputs[i])
+
 
                     if lossMain < bestLoss:
                         bestLoss = lossMain
 
                     if lossMain < lossUp and lossMain < lossDown:
-                        pass  # no improvement
+                        #   set network back to original
+                        mainNetwork.setWeight(layerInd - 1, nodeInd, weightInd, stayW)
+
                     elif lossUp < lossDown:
-                        mainNetwork = copy.deepcopy(networkUpW)
+                        #   TODO
+                        mainNetwork.setWeight(layerInd - 1, nodeInd, weightInd, upW)
                         changeWeightImproved = True
                         lossMain = lossUp
                     else:
-                        mainNetwork = copy.deepcopy(networkDownW)
+                        #   TODO
+                        mainNetwork.setWeight(layerInd - 1, nodeInd, weightInd, downW)
                         changeWeightImproved = True
                         lossMain = lossDown
 

@@ -320,6 +320,11 @@ data = [([3, 1, 3], [0.27]),
  ([7, 0, 0], [0.47]),
  ([0, 0, 6], [0.16])]
 
+#   adding my own data to account for AM hours
+for day in range(7):
+    for hour in range(1, 5):
+        data.append(([hour, 0, day], [0.0]))
+
 # Split into separate arrays
 sampleIns = [cp.array(inp, dtype=cp.float32) for inp, _ in data]
 sampleOuts = [cp.array(out, dtype=cp.float32) for _, out in data]

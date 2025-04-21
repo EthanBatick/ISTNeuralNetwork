@@ -32,7 +32,7 @@ def predict(hour, ampm, day):
     #ampm = int(input('(0 = AM, 1 = PM): '))
     #day = int(input('(0 = Monday, ..., 6 = Sunday)'))
 
-    tup = (hour, ampm, day)
+    tup = [hour, ampm, day]
 
     return min(network.fullForwardPass(tup)[0]*100, 100)
 
