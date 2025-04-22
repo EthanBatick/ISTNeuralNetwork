@@ -3,7 +3,7 @@ import sys
 from runModel import predict
 
 pygame.init()
-screen = pygame.display.set_mode((750, 500))
+screen = pygame.display.set_mode((750, 500), pygame.FULLSCREEN)
 pygame.display.set_caption("Gym Busy % Predictor")
 
 font = pygame.font.SysFont(None, 36)
@@ -63,12 +63,18 @@ while True:
                     active_index = i
                     break
 
-
         elif event.type == pygame.KEYDOWN and active_index != -1:
             if event.key == pygame.K_BACKSPACE:
                 input_texts[active_index] = input_texts[active_index][:-1]
             elif event.unicode.isdigit() and len(input_texts[active_index]) < 2:
                 input_texts[active_index] += event.unicode
+
+        #   exit when escape key pressed
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+
         try:
             hour = int(input_texts[0])
             ampm = int(input_texts[1])
