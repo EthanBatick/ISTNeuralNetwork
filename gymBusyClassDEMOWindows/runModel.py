@@ -1,6 +1,6 @@
 import os
 from PIL import Image
-import cupy as cp
+#import cupy as cp
 from networkGen import NeuralNetwork
 
 # === Load trained model ===
